@@ -1,0 +1,52 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.iGSE.mapper.AdminMapper">
+
+	<resultMap id="MeterResultMap" type="Meter">
+		<id column="id" property="id" />
+		<result column="e_meter_reading_day" property="eMeterReadingDay" />
+		<result column="e_meter_reading_night" property="eMeterReadingNight" />
+		<result column="g_meter_reading" property="gMeterReading" />
+		<result column="submission_date" property="submissionDate" />
+		<result column="active" property="active" />
+		
+	</resultMap>
+	
+	<resultMap id="MeterReadingResultMap" type="MeterReading">
+		<id column="id" property="id" />
+		<result column="e_meter_reading_day" property="eMeterReadingDay" />
+		<result column="e_meter_reading_night" property="eMeterReadingNight" />
+		<result column="g_meter_reading" property="gMeterReading" />
+		<result column="submission_date" property="submissionDate" />
+		
+	</resultMap>
+
+	<select id="getLastActiveMeterPrice"
+		resultMap="MeterResultMap">
+		select * from meter m where m.active LIKE('Y')
+	</select>
+
+	<insert id="addMeterPrice" parameterType="Meter">
+		<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+			select nextval('METER_SEQ')
+		</selectKey>
+		INSERT INTO
+		meter (id,e_meter_reading_day,e_meter_reading_night,g_meter_reading,submission_date,active) VALUES(#{id},
+		#{eMeterReadingDay},#{eMeterReadingNight},#{gMeterReading},#{submissionDate},#{active})
+	</insert>
+	
+	<update id="updateMeterPrice" parameterType="Meter">
+		UPDATE
+		meter SET
+		active = 'N'
+		WHERE id=#{id}
+	</update>
+	
+	<select id="getAllMeterReading"
+		resultMap="MeterReadingResultMap">
+		select * from meter_reading;
+	</select>
+
+</mapper>
