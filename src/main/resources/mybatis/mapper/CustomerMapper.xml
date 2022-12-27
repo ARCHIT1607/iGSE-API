@@ -14,7 +14,7 @@
 		<result column="role" property="role" />
 		<result column="evc" property="EVC" />
 		<result column="balance" property="balance" />
-		
+
 	</resultMap>
 
 	<select id="findByEmail" parameterType="String"
@@ -24,19 +24,25 @@
 
 	<insert id="register" parameterType="Customer">
 		<selectKey keyProperty="id" resultType="Long" order="BEFORE">
-			select nextval('CUSTOMER_SEQ')
+			select
+			nextval('CUSTOMER_SEQ')
 		</selectKey>
 		INSERT INTO
-		customer (id,email,password,address,property_type,bedrooms,role,EVC,balance) VALUES(#{id},
+		customer
+		(id,email,password,address,property_type,bedrooms,role,EVC,balance)
+		VALUES(#{id},
 		#{email},#{password},#{address},#{propertyType},#{bedrooms},#{role},#{EVC},#{balance})
 	</insert>
-	
+
 	<insert id="submitMeterReading" parameterType="MeterReading">
 		<selectKey keyProperty="id" resultType="Long" order="BEFORE">
-			select nextval('METER_READING_SEQ')
+			select
+			nextval('METER_READING_SEQ')
 		</selectKey>
 		INSERT INTO
-		meter_reading (id,e_meter_reading_day,e_meter_reading_night,g_meter_reading,submissio_date) VALUES(#{id},
-		#{eMeterReadingDay},#{eMeterReadingNight},#{gMeterReading},#{submissioDate})
+		meter_reading (id, email,
+		e_meter_reading_day,e_meter_reading_night,g_meter_reading,submission_date)
+		VALUES(#{id}, #{email},
+		#{eMeterReadingDay},#{eMeterReadingNight},#{gMeterReading},#{submissionDate})
 	</insert>
 </mapper>

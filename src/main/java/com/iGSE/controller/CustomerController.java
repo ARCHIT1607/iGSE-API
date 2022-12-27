@@ -1,5 +1,7 @@
 package com.iGSE.controller;
 
+import java.security.Principal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +31,8 @@ public class CustomerController {
 	@Autowired
 	BCryptPasswordEncoder passwordEncode;
 	
+	@Autowired
+    private IAuthenticationFacade authenticationFacade;
 
 	@PostMapping("/auth/register")
 	public ResponseEntity<Object> register(@RequestBody Customer cus) {
@@ -67,13 +71,12 @@ public class CustomerController {
 	}
 	
 	@PostMapping("/customer/submitMeterReading")
-	public ResponseEntity<String> submitMeterReading(@RequestBody MeterReading mReading) {
+	public ResponseEntity<String> submitMeterReading(@RequestBody MeterReading mReading,Principal authenicatedUser) {
 		try {
 			if (mReading == null) {
 				throw new Exception("Meter Reading cannot be empty");
 			} else {
-//				return new ResponseEntity<String>(cusService.submitMeterReading(mReading,authentication.getName()), HttpStatus.OK);
-				return new ResponseEntity<String>("Success", HttpStatus.OK);
+				return new ResponseEntity<String>(cusService.submitMeterReading(mReading,authenicatedUser.getName()), HttpStatus.OK);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

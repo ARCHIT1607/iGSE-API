@@ -20,7 +20,7 @@ public class MeterReading {
 
 	private int gMeterReading;
 
-	private String submissioDate;
+	private String submissionDate;
 	
 	private String email;
 
@@ -32,12 +32,12 @@ public class MeterReading {
 		this.id = id;
 	}
 
-	public String getSubmissioDate() {
-		return submissioDate;
+	public String getSubmissionDate() {
+		return submissionDate;
 	}
 
-	public void setSubmissioDate(String submissioDate) {
-		this.submissioDate = submissioDate;
+	public void setSubmissionDate(String submissionDate) {
+		this.submissionDate = submissionDate;
 	}
 
 	public int geteMeterReadingDay() {
@@ -77,21 +77,21 @@ public class MeterReading {
 		// TODO Auto-generated constructor stub
 	}
 
-	public MeterReading(long id, int eMeterReadingDay, int eMeterReadingNight, int gMeterReading, String submissioDate,
+	public MeterReading(long id, int eMeterReadingDay, int eMeterReadingNight, int gMeterReading, String submissionDate,
 			String email) {
 		super();
 		this.id = id;
 		this.eMeterReadingDay = eMeterReadingDay;
 		this.eMeterReadingNight = eMeterReadingNight;
 		this.gMeterReading = gMeterReading;
-		this.submissioDate = submissioDate;
+		this.submissionDate = submissionDate;
 		this.email = email;
 	}
 
 	@Override
 	public String toString() {
 		return "MeterReading [id=" + id + ", eMeterReadingDay=" + eMeterReadingDay + ", eMeterReadingNight="
-				+ eMeterReadingNight + ", gMeterReading=" + gMeterReading + ", submissioDate=" + submissioDate
+				+ eMeterReadingNight + ", gMeterReading=" + gMeterReading + ", submissionDate=" + submissionDate
 				+ ", email=" + email + "]";
 	}
 
