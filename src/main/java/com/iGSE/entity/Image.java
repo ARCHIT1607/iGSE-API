@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "image")
+@Table(name = "EVC")
 public class Image {
 	@Id
 	@Column(name = "id")
@@ -25,6 +25,9 @@ public class Image {
 
 	@Column(name = "image", unique = false, nullable = false, length = 100000)
 	private byte[] image;
+
+	@Column(name = "evc", unique = true, nullable = false)
+	private String evc;
 
 	public Long getId() {
 		return id;
@@ -58,12 +61,21 @@ public class Image {
 		this.image = image;
 	}
 
-	public Image(Long id, String name, String type, byte[] image) {
+	public String getEvc() {
+		return evc;
+	}
+
+	public void setEvc(String evc) {
+		this.evc = evc;
+	}
+
+	public Image(Long id, String name, String type, byte[] image, String evc) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.type = type;
 		this.image = image;
+		this.evc = evc;
 	}
 
 	public Image() {
@@ -73,8 +85,8 @@ public class Image {
 
 	@Override
 	public String toString() {
-		return "Image [id=" + id + ", name=" + name + ", type=" + type + ", image=" + Arrays.toString(image) + "]";
+		return "Image [id=" + id + ", name=" + name + ", type=" + type + ", image=" + Arrays.toString(image) + ", evc="
+				+ evc + "]";
 	}
-	
-	
+
 }

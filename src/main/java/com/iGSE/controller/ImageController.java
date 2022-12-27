@@ -28,13 +28,14 @@ public class ImageController {
     ImageRepository imageRepository;
 
     @PostMapping("/upload/image")
-    public ResponseEntity<ImageUploadResponse> uplaodImage(@RequestParam("image") MultipartFile file)
+    public ResponseEntity<ImageUploadResponse> uplaodImage(@RequestParam("image") MultipartFile file, @RequestParam("evc") String evc)
             throws IOException {
     	
     	Image img = new Image();
     	img.setImage(ImageUtility.compressImage(file.getBytes()));
     	img.setName(file.getOriginalFilename());
     	img.setType(file.getContentType());
+    	img.setEvc(evc);
         imageRepository.save(img);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ImageUploadResponse("Image uploaded successfully: " +
@@ -51,6 +52,7 @@ public class ImageController {
     	img.setImage(ImageUtility.decompressImage(dbImage.get().getImage()));
     	img.setName(dbImage.get().getName());
     	img.setType(dbImage.get().getType());
+    	img.setEvc(dbImage.get().getEvc());
         return img;
     }
 
