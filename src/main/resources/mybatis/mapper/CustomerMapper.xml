@@ -12,7 +12,6 @@
 		<result column="propertyType" property="propertyType" />
 		<result column="bedrooms" property="bedrooms" />
 		<result column="role" property="role" />
-		<result column="evc" property="EVC" />
 		<result column="balance" property="balance" />
 
 	</resultMap>
@@ -29,9 +28,9 @@
 		</selectKey>
 		INSERT INTO
 		customer
-		(id,email,password,address,property_type,bedrooms,role,EVC,balance)
+		(id,email,password,address,property_type,bedrooms,role,balance)
 		VALUES(#{id},
-		#{email},#{password},#{address},#{propertyType},#{bedrooms},#{role},#{EVC},#{balance})
+		#{email},#{password},#{address},#{propertyType},#{bedrooms},#{role},#{balance})
 	</insert>
 
 	<insert id="submitMeterReading" parameterType="MeterReading">
@@ -45,4 +44,16 @@
 		VALUES(#{id}, #{email},
 		#{eMeterReadingDay},#{eMeterReadingNight},#{gMeterReading},#{submissionDate})
 	</insert>
+
+	<select id="getBalance" parameterType="String"
+		resultType="String">
+		select balance from customer where email =#{email}
+	</select>
+
+	<update id="topUp" parameterType="Customer">
+		UPDATE
+		Customer SET
+		balance =#{balance}
+		WHERE id=#{id}
+	</update>
 </mapper>

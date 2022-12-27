@@ -11,7 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "EVC")
-public class Image {
+public class EVC {
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +28,9 @@ public class Image {
 
 	@Column(name = "evc", unique = true, nullable = false)
 	private String evc;
+	
+	@Column(name = "isExpired", unique = false)
+	private boolean isExpired;
 
 	public Long getId() {
 		return id;
@@ -69,24 +72,33 @@ public class Image {
 		this.evc = evc;
 	}
 
-	public Image(Long id, String name, String type, byte[] image, String evc) {
+	public boolean isExpired() {
+		return isExpired;
+	}
+
+	public void setExpired(boolean isExpired) {
+		this.isExpired = isExpired;
+	}
+
+	public EVC(Long id, String name, String type, byte[] image, String evc, boolean isExpired) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.type = type;
 		this.image = image;
 		this.evc = evc;
+		this.isExpired = isExpired;
 	}
 
-	public Image() {
+	public EVC() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public String toString() {
-		return "Image [id=" + id + ", name=" + name + ", type=" + type + ", image=" + Arrays.toString(image) + ", evc="
-				+ evc + "]";
+		return "EVC [id=" + id + ", name=" + name + ", type=" + type + ", image=" + Arrays.toString(image) + ", evc="
+				+ evc + ", isExpired=" + isExpired + "]";
 	}
 
 }

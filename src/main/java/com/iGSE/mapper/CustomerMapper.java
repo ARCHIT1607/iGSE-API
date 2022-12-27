@@ -18,6 +18,6 @@ public interface CustomerMapper {
 
 	public String getBalance(String email);
 
-	public String topUp(String eVC);
+	public void topUp(Customer cus);
 
 }

@@ -24,9 +24,9 @@ public class Customer {
 
 	private int bedrooms;
 
-	private String role = "USER";
+	private String role = "ROLE_USER";
 
-	private long EVC;
+//	private long EVC;
 	
 	private long balance;
 
@@ -38,13 +38,13 @@ public class Customer {
 		this.id = id;
 	}
 
-	public long getEVC() {
-		return EVC;
-	}
-
-	public void setEVC(long eVC) {
-		EVC = eVC;
-	}
+//	public long getEVC() {
+//		return EVC;
+//	}
+//
+//	public void setEVC(long eVC) {
+//		EVC = eVC;
+//	}
 
 	public String getEmail() {
 		return email;
@@ -103,7 +103,7 @@ public class Customer {
 	}
 
 	public Customer(long id, String email, String address, String propertyType, int bedrooms, String password,
-			String role, long eVC,long balance) {
+			String role, long balance) {
 		super();
 		this.id = id;
 		this.email = email;
@@ -113,7 +113,6 @@ public class Customer {
 		this.password = password;
 		this.role = role;
 		this.balance = balance;
-		EVC = eVC;
 	}
 
 	public Customer() {
@@ -123,7 +122,7 @@ public class Customer {
 	@Override
 	public String toString() {
 		return "Customer [id=" + id + ", email=" + email + ", password=" + password + ", address=" + address
-				+ ", propertyType=" + propertyType + ", bedrooms=" + bedrooms + ", role=" + role + ", EVC=" + EVC + "]";
+				+ ", propertyType=" + propertyType + ", bedrooms=" + bedrooms + ", role=" + role + "]";
 	}
 
 }

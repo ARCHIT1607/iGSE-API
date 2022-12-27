@@ -5,20 +5,21 @@ import java.security.Principal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.iGSE.entity.Customer;
+import com.iGSE.entity.EVC;
 import com.iGSE.entity.MeterReading;
 import com.iGSE.service.CustomerService;
-import com.iGSE.service.IAuthenticationFacade;
+import com.iGSE.service.QRService;
 
 @RestController
 @Transactional
@@ -29,21 +30,25 @@ public class CustomerController {
 	private CustomerService cusService;
 	
 	@Autowired
-	BCryptPasswordEncoder passwordEncode;
+	private QRService qrService;
 	
 	@Autowired
-    private IAuthenticationFacade authenticationFacade;
+	BCryptPasswordEncoder passwordEncode;
 
-	@PostMapping("/auth/register")
-	public ResponseEntity<Object> register(@RequestBody Customer cus) {
-		Customer user = cusService.findByEmail(cus.getEmail());
-		System.out.println("user "+user);
+	@PostMapping("/auth/register/{evc}")
+	public ResponseEntity<Object> register(@PathVariable("evc") String evc, @RequestBody Customer cus) {
 		try {
+			Customer user = cusService.findByEmail(cus.getEmail());
+			EVC qr = qrService.getQrDetails(evc);
+			System.out.println("user "+user);
+			if(qr.isExpired()==true) {
+				throw new Exception("EVC has expired, Try with another one");
+			}
 			if (user!=null && user.getEmail().toUpperCase().equals(cus.getEmail().toUpperCase())) {
 				throw new Exception("user already exists");
 			}
 			cus.setPassword(passwordEncode.encode(cus.getPassword()));
-			return new ResponseEntity<Object>(cusService.register(cus), HttpStatus.OK);
+			return new ResponseEntity<Object>(cusService.register(cus,evc), HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<Object>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -85,12 +90,16 @@ public class CustomerController {
 	}
 	
 	@PostMapping("/customer/topUp")
-	public ResponseEntity<String> topUp(@RequestParam(name = "EVC") String EVC) {
+	public ResponseEntity<String> topUp(@RequestParam(name = "EVC") String EVC,Principal authenicatedUser) {
 		try {
+			EVC qr = qrService.getQrDetails(EVC);
+			if(qr.isExpired()==true) {
+				throw new Exception("EVC has expired, Try with another one");
+			}
 			if (EVC == null) {
 				throw new Exception("EVC is null");
 			} else {
-				return new ResponseEntity<String>(cusService.topUp(EVC), HttpStatus.OK);
+				return new ResponseEntity<String>(cusService.topUp(authenicatedUser.getName()), HttpStatus.OK);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -99,12 +108,12 @@ public class CustomerController {
 	}
 	
 	@GetMapping("/customer/getBalance")
-	public ResponseEntity<String> getBalance(@RequestParam(name = "email") String email) {
+	public ResponseEntity<String> getBalance(Principal authenicatedUser) {
 		try {
-			if (email == null) {
+			if (authenicatedUser.getName() == null) {
 				throw new Exception("Email is null");
 			} else {
-				return new ResponseEntity<String>(cusService.getBalance(email), HttpStatus.OK);
+				return new ResponseEntity<String>(cusService.getBalance(authenicatedUser.getName()), HttpStatus.OK);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
