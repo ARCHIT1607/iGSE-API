@@ -27,9 +27,13 @@ public interface CustomerMapper {
 	public List<MeterReading> getMeterReadings(String email);
 
 	public List<Bill> getBill(String email);
+	
+	public List<Bill> getUnPaidBill(String email);
 
 	public void generateBill(Bill bill);
 
 	public void payBill(Bill bill);
+
+	public MeterReading checkSubmissionDate(Map<String, String> param);
 
 }

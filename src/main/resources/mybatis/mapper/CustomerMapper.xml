@@ -25,6 +25,17 @@
 		<result column="submission_date" property="submissionDate" />
 
 	</resultMap>
+	
+	<resultMap id="BillResultMap" type="Bill">
+		<id column="id" property="id" />
+		<result column="email" property="email" />
+		<result column="e_meter_reading_day" property="eMeterReadingDay" />
+		<result column="e_meter_reading_night" property="eMeterReadingNight" />
+		<result column="g_meter_reading" property="gMeterReading" />
+		<result column="bill_date" property="billDate" />
+		<result column="status" property="status" />
+
+	</resultMap>
 
 	<select id="findByEmail" parameterType="String"
 		resultMap="CustomerResultMap">
@@ -66,8 +77,13 @@
 	</select>
 	
 	<select id="getBill" parameterType="String"
-		resultType="Bill">
-		select * from bill where email =#{email} and status LIKE 'un-paid'
+		resultMap="BillResultMap">
+		select * from bill where email =#{email} ORDER BY id DESC
+	</select>
+	
+	<select id="getUnPaidBill" parameterType="String"
+		resultMap="BillResultMap">
+		select * from bill where email =#{email} and status = 'un-paid' ORDER BY id DESC
 	</select>
 
 	<update id="topUp" parameterType="Customer">
@@ -95,4 +111,10 @@
 		status = 'paid'
 		WHERE email=#{email}
 	</update>
+	
+	<select id="checkSubmissionDate" parameterType="HashMap"
+		resultMap="MeterReadingResultMap">
+		select * from meter_reading where submission_date = #{submissionDate} and submission_date > #{billDate}
+	</select>
+	
 </mapper>

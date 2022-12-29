@@ -22,7 +22,7 @@ public class CustomerService {
 
 	@Autowired
 	private CustomerMapper cusMapper;
-	
+
 	@Autowired
 	private CustomerRepository cusRepo;
 	@Autowired
@@ -35,8 +35,8 @@ public class CustomerService {
 	public Customer register(Customer cus, String evc) {
 		cus.setBalance(200);
 		Customer result = cusRepo.save(cus);
-		System.out.println("result "+result + " "+result.getClass() + "evc "+evc);
-		if(result!=null) {
+		System.out.println("result " + result + " " + result.getClass() + "evc " + evc);
+		if (result != null) {
 			imageRepo.updateEvcExpiry(evc);
 		}
 		return result;
@@ -50,7 +50,7 @@ public class CustomerService {
 			mReading.setEmail(email);
 			success = cusMapper.submitMeterReading(mReading);
 			List<MeterReading> meterReadings = cusMapper.getMeterReadings(email);
-			if(meterReadings.size()==2) {
+			if(meterReadings.size()>1) {
 				Bill bill = new Bill();
 				System.out.println("first merer "+meterReadings.get(0));
 				System.out.println("second merer "+meterReadings.get(1));
@@ -61,15 +61,45 @@ public class CustomerService {
 				bill.setgMeterReading(meterReadings.get(1).getgMeterReading() - meterReadings.get(0).getgMeterReading());
 				cusMapper.generateBill(bill);
 			}
-		}else if(bills.size()>0){
-			throw new Exception("Please fill exisitng bill first");
 		}
-		if(success==1){
-			response = "sumitted successfuly";
-		}else{
-				throw new Exception("Error in submission");
+		else {
+			if(!bills.get(0).getStatus().equals("un-paid")) {
+				mReading.setEmail(email);
+				success = cusMapper.submitMeterReading(mReading);
+				Map<String,String> param = new HashMap<>();
+				System.out.println("bills.get(0).getBillDate() "+bills.get(0));
+				param.put("billDate", bills.get(0).getBillDate());
+				param.put("submissionDate", mReading.getSubmissionDate());
+				MeterReading meter = cusMapper.checkSubmissionDate(param);
+				if(meter!=null) {
+					Bill bill = new Bill();
+					System.out.println("first merer "+meter);
+					System.out.println("second merer "+bills.get(0));
+					bill.setBillDate(meter.getSubmissionDate());
+					bill.setEmail(email);
+					bill.seteMeterReadingDay(meter.geteMeterReadingDay() - bills.get(0).geteMeterReadingDay());
+					bill.seteMeterReadingNight(meter.geteMeterReadingNight() - bills.get(0).geteMeterReadingNight());
+					bill.setgMeterReading(meter.getgMeterReading() - bills.get(0).getgMeterReading());
+					cusMapper.generateBill(bill);
+				}else {
+					throw new Exception("Please choose correct bill date");
+				}
+			}else {
+				throw new Exception("Please pay exisitng bill first");
 			}
-		return response;
+				
+			}
+//		}else if(bills.size()>0){
+//			throw new Exception("Please fill exisitng bill first");
+//		}
+	if(success==1)
+
+	{
+		response = "sumitted successfuly";
+	}else
+	{
+		throw new Exception("Error in submission");
+	}return response;
 	}
 
 	public String getBalance(String email) {
@@ -87,6 +117,10 @@ public class CustomerService {
 	public List<Bill> getBill(String email){
 		return cusMapper.getBill(email);
 	}
+	
+	public List<Bill> getUnPaidBill(String email){
+		return cusMapper.getUnPaidBill(email);
+	}
 
 	public String findDifference(String name) {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -101,7 +135,7 @@ public class CustomerService {
 	}
 
 	public String payBill(String email, String billId) throws Exception {
-		List<Bill> bills = cusMapper.getBill(email);
+		List<Bill> bills = cusMapper.getUnPaidBill(email);
 		if(bills.size()==1) {
 			Bill bill = new Bill();
 			bill = bills.get(0);
@@ -111,6 +145,5 @@ public class CustomerService {
 		}
 		return "Bill Paid";
 	}
-
 
 }

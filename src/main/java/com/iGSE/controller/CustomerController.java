@@ -129,13 +129,28 @@ public class CustomerController {
 				throw new Exception("Email is null");
 			} else {
 				return new ResponseEntity<Object>(cusService.getBill(authenicatedUser.getName()), HttpStatus.OK);
-//				return new ResponseEntity<Object>("success", HttpStatus.OK);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<Object>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}
+	
+	@GetMapping("/customer/getUnPaidBill")
+	public ResponseEntity<Object> getUnPaidBill(Principal authenicatedUser) {
+		try {
+			if (authenicatedUser.getName() == null) {
+				throw new Exception("Email is null");
+			} else {
+				return new ResponseEntity<Object>(cusService.getUnPaidBill(authenicatedUser.getName()), HttpStatus.OK);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<Object>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	
 	
 
 	@PostMapping("/customer/payBill")
