@@ -6,9 +6,9 @@
 
 	<resultMap id="MeterResultMap" type="Meter">
 		<id column="id" property="id" />
-		<result column="e_meter_reading_day" property="eMeterReadingDay" />
-		<result column="e_meter_reading_night" property="eMeterReadingNight" />
-		<result column="g_meter_reading" property="gMeterReading" />
+		<result column="e_meter_price_day" property="eMeterPriceDay" />
+		<result column="e_meter_price_night" property="eMeterPriceNight" />
+		<result column="g_meter_price" property="gMeterPrice" />
 		<result column="submission_date" property="submissionDate" />
 		<result column="active" property="active" />
 		

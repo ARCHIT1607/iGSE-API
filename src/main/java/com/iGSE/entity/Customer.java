@@ -28,7 +28,7 @@ public class Customer {
 
 //	private long EVC;
 	
-	private long balance;
+	private double balance;
 
 	public long getId() {
 		return id;
@@ -94,16 +94,16 @@ public class Customer {
 		this.bedrooms = bedrooms;
 	}
 
-	public long getBalance() {
+	public double getBalance() {
 		return balance;
 	}
 
-	public void setBalance(long balance) {
+	public void setBalance(double balance) {
 		this.balance = balance;
 	}
 
 	public Customer(long id, String email, String address, String propertyType, int bedrooms, String password,
-			String role, long balance) {
+			String role, double balance) {
 		super();
 		this.id = id;
 		this.email = email;

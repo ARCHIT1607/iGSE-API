@@ -40,5 +40,7 @@ public class AdminController {
 			return new ResponseEntity<Object>(e.getMessage(),HttpStatus.BAD_REQUEST);
 		}
 	}
+	
+	
 
 }

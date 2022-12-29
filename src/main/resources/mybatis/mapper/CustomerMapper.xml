@@ -33,8 +33,21 @@
 		<result column="e_meter_reading_night" property="eMeterReadingNight" />
 		<result column="g_meter_reading" property="gMeterReading" />
 		<result column="bill_date" property="billDate" />
+		<result column="days" property="days" />
+		<result column="due" property="due" />
 		<result column="status" property="status" />
 
+	</resultMap>
+	
+	<resultMap id="MeterResultMap" type="Meter">
+		<id column="id" property="id" />
+		<result column="e_meter_price_day" property="eMeterPriceDay" />
+		<result column="e_meter_price_night" property="eMeterPriceNight" />
+		<result column="g_meter_price" property="gMeterPrice" />
+		<result column="submission_date" property="submissionDate" />
+		<result column="standing_charge" property="standingCharge" />
+		<result column="active" property="active" />
+		
 	</resultMap>
 
 	<select id="findByEmail" parameterType="String"
@@ -73,7 +86,7 @@
 	
 	<select id="getMeterReadings" parameterType="String"
 		resultMap="MeterReadingResultMap">
-		select * from meter_reading where email =#{email}
+		select * from meter_reading where email =#{email} ORDER BY id DESC
 	</select>
 	
 	<select id="getBill" parameterType="String"
@@ -93,6 +106,13 @@
 		WHERE id=#{id}
 	</update>
 	
+	<update id="updateBalance" parameterType="Customer">
+		UPDATE
+		Customer SET
+		balance =#{balance}
+		WHERE email=#{email}
+	</update>
+	
 	<insert id="generateBill" parameterType="Bill">
 		<selectKey keyProperty="id" resultType="Long" order="BEFORE">
 			select
@@ -100,9 +120,9 @@
 		</selectKey>
 		INSERT INTO
 		bill (id, bill_date, email,
-		e_meter_reading_day,e_meter_reading_night,g_meter_reading, status)
+		e_meter_reading_day,e_meter_reading_night,g_meter_reading, status, days, due)
 		VALUES(#{id}, #{billDate}, #{email},
-		#{eMeterReadingDay},#{eMeterReadingNight},#{gMeterReading}, #{status})
+		#{eMeterReadingDay},#{eMeterReadingNight},#{gMeterReading}, #{status}, #{days}, #{due})
 	</insert>
 	
 	<update id="payBill" parameterType="Bill">
@@ -115,6 +135,11 @@
 	<select id="checkSubmissionDate" parameterType="HashMap"
 		resultMap="MeterReadingResultMap">
 		select * from meter_reading where submission_date = #{submissionDate} and submission_date > #{billDate}
+	</select>
+	
+	<select id="getLastActiveMeterPrice"
+		resultMap="MeterResultMap">
+		select * from meter m where m.active LIKE('Y')
 	</select>
 	
 </mapper>

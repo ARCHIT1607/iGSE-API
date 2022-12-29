@@ -14,11 +14,13 @@ public class Meter {
 	@SequenceGenerator(initialValue = 1, name = "METER_SEQ", sequenceName = "METER_SEQ", allocationSize = 1)
 	private long id;
 
-	private int eMeterReadingDay;
+	private double eMeterPriceDay;
 
-	private int eMeterReadingNight;
+	private double eMeterPriceNight;
 
-	private int gMeterReading;
+	private double gMeterPrice;
+	
+	private double standingCharge;
 	
 	private String submissionDate;
 
@@ -32,28 +34,40 @@ public class Meter {
 		this.id = id;
 	}
 
-	public int geteMeterReadingDay() {
-		return eMeterReadingDay;
+	public double geteMeterPriceDay() {
+		return eMeterPriceDay;
 	}
 
-	public void seteMeterReadingDay(int eMeterReadingDay) {
-		this.eMeterReadingDay = eMeterReadingDay;
+	public void seteMeterPriceDay(double eMeterPriceDay) {
+		this.eMeterPriceDay = eMeterPriceDay;
 	}
 
-	public int geteMeterReadingNight() {
-		return eMeterReadingNight;
+	public double geteMeterPriceNight() {
+		return eMeterPriceNight;
 	}
 
-	public void seteMeterReadingNight(int eMeterReadingNight) {
-		this.eMeterReadingNight = eMeterReadingNight;
+	public void seteMeterPriceNight(double eMeterPriceNight) {
+		this.eMeterPriceNight = eMeterPriceNight;
 	}
 
-	public int getgMeterReading() {
-		return gMeterReading;
+	public double getgMeterPrice() {
+		return gMeterPrice;
 	}
 
-	public void setgMeterReading(int gMeterReading) {
-		this.gMeterReading = gMeterReading;
+	public void setgMeterPrice(double gMeterPrice) {
+		this.gMeterPrice = gMeterPrice;
+	}
+
+	public double getStandingCharge() {
+		return standingCharge;
+	}
+
+	public void setStandingCharge(double standingCharge) {
+		this.standingCharge = standingCharge;
+	}
+
+	public String getActive() {
+		return active;
 	}
 
 	public String isActive() {
@@ -72,15 +86,13 @@ public class Meter {
 		this.submissionDate = submissionDate;
 	}
 
-	public Meter(long id, int eMeterReadingDay, int eMeterReadingNight, int gMeterReading, String submissionDate,
-			String active) {
-		super();
-		this.id = id;
-		this.eMeterReadingDay = eMeterReadingDay;
-		this.eMeterReadingNight = eMeterReadingNight;
-		this.gMeterReading = gMeterReading;
-		this.submissionDate = submissionDate;
-		this.active = active;
+	
+
+	@Override
+	public String toString() {
+		return "Meter [id=" + id + ", eMeterPriceDay=" + eMeterPriceDay + ", eMeterPriceNight=" + eMeterPriceNight
+				+ ", gMeterPrice=" + gMeterPrice + ", standingCharge=" + standingCharge + ", submissionDate="
+				+ submissionDate + ", active=" + active + "]";
 	}
 
 	public Meter() {
@@ -88,12 +100,19 @@ public class Meter {
 		// TODO Auto-generated constructor stub
 	}
 
-	@Override
-	public String toString() {
-		return "Meter [id=" + id + ", eMeterReadingDay=" + eMeterReadingDay + ", eMeterReadingNight="
-				+ eMeterReadingNight + ", gMeterReading=" + gMeterReading + ", submissionDate=" + submissionDate
-				+ ", active=" + active + "]";
+	public Meter(long id, double eMeterPriceDay, double eMeterPriceNight, double gMeterPrice, double standingCharge,
+			String submissionDate, String active) {
+		super();
+		this.id = id;
+		this.eMeterPriceDay = eMeterPriceDay;
+		this.eMeterPriceNight = eMeterPriceNight;
+		this.gMeterPrice = gMeterPrice;
+		this.standingCharge = standingCharge;
+		this.submissionDate = submissionDate;
+		this.active = active;
 	}
+
+	
 
 
 }

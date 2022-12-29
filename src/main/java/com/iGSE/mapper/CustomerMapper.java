@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.iGSE.entity.Bill;
 import com.iGSE.entity.Customer;
+import com.iGSE.entity.Meter;
 import com.iGSE.entity.MeterReading;
 
 @Mapper
@@ -35,5 +36,9 @@ public interface CustomerMapper {
 	public void payBill(Bill bill);
 
 	public MeterReading checkSubmissionDate(Map<String, String> param);
+	
+	Meter getLastActiveMeterPrice();
+
+	public void updateBalance(Customer customer);
 
 }

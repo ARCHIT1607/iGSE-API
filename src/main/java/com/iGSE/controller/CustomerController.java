@@ -26,13 +26,13 @@ import com.iGSE.service.QRService;
 @Transactional
 @CrossOrigin
 public class CustomerController {
-	
+
 	@Autowired
 	private CustomerService cusService;
-	
+
 	@Autowired
 	private QRService qrService;
-	
+
 	@Autowired
 	BCryptPasswordEncoder passwordEncode;
 
@@ -41,26 +41,26 @@ public class CustomerController {
 		try {
 			Customer user = cusService.findByEmail(cus.getEmail());
 			EVC qr = qrService.getQrDetails(evc);
-			System.out.println("user "+user);
-			if(qr.isExpired()==true) {
+			System.out.println("user " + user);
+			if (qr.isExpired() == true) {
 				throw new Exception("EVC has expired, Try with another one");
 			}
-			if (user!=null && user.getEmail().toUpperCase().equals(cus.getEmail().toUpperCase())) {
+			if (user != null && user.getEmail().toUpperCase().equals(cus.getEmail().toUpperCase())) {
 				throw new Exception("user already exists");
 			}
 			cus.setPassword(passwordEncode.encode(cus.getPassword()));
-			return new ResponseEntity<Object>(cusService.register(cus,evc), HttpStatus.OK);
+			return new ResponseEntity<Object>(cusService.register(cus, evc), HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<Object>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	@PostMapping("/auth/login")
 	public ResponseEntity<String> getUserDetails(@RequestParam(name = "email") String email,
 			@RequestParam(name = "password") String password) {
 		Customer user = cusService.findByEmail(email);
-		System.out.println("user "+user);
+		System.out.println("user " + user);
 		try {
 			if (user == null) {
 				throw new Exception("User doesn't Exist");
@@ -75,39 +75,40 @@ public class CustomerController {
 			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 	@PostMapping("/customer/submitMeterReading")
-	public ResponseEntity<String> submitMeterReading(@RequestBody MeterReading mReading,Principal authenicatedUser) {
+	public ResponseEntity<String> submitMeterReading(@RequestBody MeterReading mReading, Principal authenicatedUser) {
 		try {
 			if (mReading == null) {
 				throw new Exception("Meter Reading cannot be empty");
 			} else {
-				return new ResponseEntity<String>(cusService.submitMeterReading(mReading,authenicatedUser.getName()), HttpStatus.OK);
+				return new ResponseEntity<String>(cusService.submitMeterReading(mReading, authenicatedUser.getName()),
+						HttpStatus.OK);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 	@PostMapping("/customer/topUp")
-	public ResponseEntity<String> topUp(@RequestParam(name = "EVC") String EVC,Principal authenicatedUser) {
+	public ResponseEntity<String> topUp(@RequestParam(name = "EVC") String EVC, Principal authenicatedUser) {
 		try {
 			EVC qr = qrService.getQrDetails(EVC);
-			if(qr.isExpired()==true) {
+			if (qr.isExpired() == true) {
 				throw new Exception("EVC has expired, Try with another one");
 			}
 			if (EVC == null) {
 				throw new Exception("EVC is null");
 			} else {
-				return new ResponseEntity<String>(cusService.topUp(authenicatedUser.getName(),EVC), HttpStatus.OK);
+				return new ResponseEntity<String>(cusService.topUp(authenicatedUser.getName(), EVC), HttpStatus.OK);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 	@GetMapping("/customer/getBalance")
 	public ResponseEntity<String> getBalance(Principal authenicatedUser) {
 		try {
@@ -121,7 +122,7 @@ public class CustomerController {
 			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 	@GetMapping("/customer/getBill")
 	public ResponseEntity<Object> getBill(Principal authenicatedUser) {
 		try {
@@ -135,7 +136,7 @@ public class CustomerController {
 			return new ResponseEntity<Object>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 	@GetMapping("/customer/getUnPaidBill")
 	public ResponseEntity<Object> getUnPaidBill(Principal authenicatedUser) {
 		try {
@@ -149,17 +150,16 @@ public class CustomerController {
 			return new ResponseEntity<Object>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}
-	
-	
-	
 
 	@PostMapping("/customer/payBill")
-	public ResponseEntity<String> payBill(@RequestParam(name = "billId") String billId,Principal authenicatedUser) {
+	public ResponseEntity<String> payBill(@RequestParam(name = "billId") String billId,
+			@RequestParam(name = "amt") String amt, Principal authenicatedUser) {
 		try {
 			if (billId == null) {
 				throw new Exception("EVC is null");
 			} else {
-				return new ResponseEntity<String>(cusService.payBill(authenicatedUser.getName(),billId), HttpStatus.OK);
+				return new ResponseEntity<String>(cusService.payBill(authenicatedUser.getName(), billId,amt),
+						HttpStatus.OK);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -167,15 +167,24 @@ public class CustomerController {
 		}
 	}
 
-	
-	@GetMapping("/customer/findDifference")
-	public ResponseEntity<Object> findDifference(Principal authenicatedUser) {
+//	@GetMapping("/customer/findDifference")
+//	public ResponseEntity<Object> findDifference(Principal authenicatedUser) {
+//		try {
+//			if (authenicatedUser.getName() == null) {
+//				throw new Exception("Email is null");
+//			} else {
+//				return new ResponseEntity<Object>(cusService.findDifference(authenicatedUser.getName()), HttpStatus.OK);
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			return new ResponseEntity<Object>(e.getMessage(), HttpStatus.BAD_REQUEST);
+//		}
+//	}
+
+	@GetMapping("/customer/getMeterPrice")
+	public ResponseEntity<Object> getMeterReading() {
 		try {
-			if (authenicatedUser.getName() == null) {
-				throw new Exception("Email is null");
-			} else {
-				return new ResponseEntity<Object>(cusService.findDifference(authenicatedUser.getName()), HttpStatus.OK);
-			}
+			return new ResponseEntity<Object>(cusService.getMeterPrice(), HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<Object>(e.getMessage(), HttpStatus.BAD_REQUEST);

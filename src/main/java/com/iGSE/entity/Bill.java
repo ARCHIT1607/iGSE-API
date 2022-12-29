@@ -20,9 +20,13 @@ public class Bill {
 
 	private int gMeterReading;
 	
+	private long days;
+	
 	private String billDate;
 	
 	private String email;
+	
+	private double due;
 
 	public String getEmail() {
 		return email;
@@ -82,23 +86,43 @@ public class Bill {
 		this.billDate = billDate;
 	}
 
-	@Override
-	public String toString() {
-		return "Bill [id=" + id + ", eMeterReadingDay=" + eMeterReadingDay + ", eMeterReadingNight="
-				+ eMeterReadingNight + ", gMeterReading=" + gMeterReading + ", billDate=" + billDate + ", email="
-				+ email + ", status=" + status + "]";
+	public long getDays() {
+		return days;
 	}
 
-	public Bill(long id, int eMeterReadingDay, int eMeterReadingNight, int gMeterReading, String billDate, String email,
-			String status) {
+	public void setDays(long days) {
+		this.days = days;
+	}
+
+	public double getDue() {
+		return due;
+	}
+
+	public void setDue(double due) {
+		this.due = due;
+	}
+
+	
+
+	public Bill(long id, int eMeterReadingDay, int eMeterReadingNight, int gMeterReading, long days, String billDate,
+			String email, double due, String status) {
 		super();
 		this.id = id;
 		this.eMeterReadingDay = eMeterReadingDay;
 		this.eMeterReadingNight = eMeterReadingNight;
 		this.gMeterReading = gMeterReading;
+		this.days = days;
 		this.billDate = billDate;
 		this.email = email;
+		this.due = due;
 		this.status = status;
+	}
+
+	@Override
+	public String toString() {
+		return "Bill [id=" + id + ", eMeterReadingDay=" + eMeterReadingDay + ", eMeterReadingNight="
+				+ eMeterReadingNight + ", gMeterReading=" + gMeterReading + ", days=" + days + ", billDate=" + billDate
+				+ ", email=" + email + ", due=" + due + ", status=" + status + "]";
 	}
 
 	public Bill() {
