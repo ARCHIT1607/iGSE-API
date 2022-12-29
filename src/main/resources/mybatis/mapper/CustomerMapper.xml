@@ -15,6 +15,16 @@
 		<result column="balance" property="balance" />
 
 	</resultMap>
+	
+	<resultMap id="MeterReadingResultMap" type="MeterReading">
+		<id column="id" property="id" />
+		<result column="email" property="email" />
+		<result column="e_meter_reading_day" property="eMeterReadingDay" />
+		<result column="e_meter_reading_night" property="eMeterReadingNight" />
+		<result column="g_meter_reading" property="gMeterReading" />
+		<result column="submission_date" property="submissionDate" />
+
+	</resultMap>
 
 	<select id="findByEmail" parameterType="String"
 		resultMap="CustomerResultMap">
@@ -49,11 +59,40 @@
 		resultType="String">
 		select balance from customer where email =#{email}
 	</select>
+	
+	<select id="getMeterReadings" parameterType="String"
+		resultMap="MeterReadingResultMap">
+		select * from meter_reading where email =#{email}
+	</select>
+	
+	<select id="getBill" parameterType="String"
+		resultType="Bill">
+		select * from bill where email =#{email} and status LIKE 'un-paid'
+	</select>
 
 	<update id="topUp" parameterType="Customer">
 		UPDATE
 		Customer SET
 		balance =#{balance}
 		WHERE id=#{id}
+	</update>
+	
+	<insert id="generateBill" parameterType="Bill">
+		<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+			select
+			nextval('BILL_SEQ')
+		</selectKey>
+		INSERT INTO
+		bill (id, bill_date, email,
+		e_meter_reading_day,e_meter_reading_night,g_meter_reading, status)
+		VALUES(#{id}, #{billDate}, #{email},
+		#{eMeterReadingDay},#{eMeterReadingNight},#{gMeterReading}, #{status})
+	</insert>
+	
+	<update id="payBill" parameterType="Bill">
+		UPDATE
+		Bill SET
+		status = 'paid'
+		WHERE email=#{email}
 	</update>
 </mapper>

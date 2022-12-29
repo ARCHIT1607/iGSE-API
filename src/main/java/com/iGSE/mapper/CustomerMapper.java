@@ -1,7 +1,11 @@
 package com.iGSE.mapper;
 
+import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Mapper;
 
+import com.iGSE.entity.Bill;
 import com.iGSE.entity.Customer;
 import com.iGSE.entity.MeterReading;
 
@@ -19,5 +23,13 @@ public interface CustomerMapper {
 	public String getBalance(String email);
 
 	public void topUp(Customer cus);
+
+	public List<MeterReading> getMeterReadings(String email);
+
+	public List<Bill> getBill(String email);
+
+	public void generateBill(Bill bill);
+
+	public void payBill(Bill bill);
 
 }

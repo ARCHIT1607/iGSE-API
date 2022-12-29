@@ -11,5 +11,6 @@
         <typeAlias type="com.iGSE.entity.Customer" alias="Customer" />
         <typeAlias type="com.iGSE.entity.MeterReading" alias="MeterReading" />
         <typeAlias type="com.iGSE.entity.Meter" alias="Meter" />
+        <typeAlias type="com.iGSE.entity.Bill" alias="Bill" />
     </typeAliases>
 </configuration>
